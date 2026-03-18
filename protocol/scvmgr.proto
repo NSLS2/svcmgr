@@ -1,0 +1,16 @@
+Terminator = LF;
+InTerminator = LF;
+
+getString {
+    wait 50;
+    ExtraInput=Ignore;
+    out "$1";
+    in %s;
+}
+
+getInteger {
+    wait 50;
+    ExtraInput=Ignore;
+    out "$1";
+    in %d;
+}

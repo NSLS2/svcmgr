@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <display version="2.0.0">
+    <name>ServiceControl</name>
+    <widget type="rectangle" version="2.0.0">
+      <x>0</x>
+      <y>11</y>
+      <transparent>true</transparent>
+      <line_width>2</line_width>
+      <line_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </line_color>
+      <name>Rectangle_1</name>
+      <width>330</width>
+      <height>90</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>30</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Stop or Start the $(SVC) service</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_1</name>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <x>170</x>
+      <y>30</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)State</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="115" blue="255" green="223" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>ComboBox_1</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>60</y>
+      <width>150</width>
+      <height>20</height>
+      <text>Enable or disable the $(SVC) service</text>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="187" blue="187" green="187" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <horizontal_alignment>0</horizontal_alignment>
+      <name>Label_2</name>
+    </widget>
+    <widget type="combo" version="2.0.0">
+      <x>170</x>
+      <y>60</y>
+      <width>150</width>
+      <height>20</height>
+      <pv_name>$(P)$(R)Enabled</pv_name>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <background_color>
+        <color red="115" blue="255" green="223" alpha="255"/>
+      </background_color>
+      <font>
+        <font family="Liberation Sans" size="16" style="REGULAR"/>
+      </font>
+      <name>ComboBox_2</name>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>0</y>
+      <width>320</width>
+      <height>20</height>
+      <text>ServiceControl</text>
+      <auto_size>true</auto_size>
+      <font>
+        <font family="Liberation Sans" size="18" style="REGULAR"/>
+      </font>
+      <border_width>2</border_width>
+      <border_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </border_color>
+      <background_color>
+        <color red="218" blue="218" green="218" alpha="255"/>
+      </background_color>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <transparent>false</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <name>Label_3</name>
+    </widget>
+    <background_color>
+      <color red="187" blue="187" green="187" alpha="255"/>
+    </background_color>
+    <height>100</height>
+    <width>330</width>
+  </display>

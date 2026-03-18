@@ -1,0 +1,13 @@
+# pixi environments
+.pixi/*
+!.pixi/config.toml
+O.*/
+lib/
+db/
+dbd/
+bin/
+*.swp
+.vscode/
+autorun.cmd
+*.local
+envPaths

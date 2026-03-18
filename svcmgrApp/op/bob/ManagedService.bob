@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <display version="2.0.0">
+    <name>ManagedService</name>
+    <widget type="rectangle" version="2.0.0">
+      <x>0</x>
+      <y>11</y>
+      <transparent>true</transparent>
+      <line_width>2</line_width>
+      <line_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </line_color>
+      <name>Rectangle_1</name>
+      <width>330</width>
+      <height>30</height>
+    </widget>
+    <widget type="label" version="2.0.0">
+      <x>10</x>
+      <y>0</y>
+      <width>320</width>
+      <height>20</height>
+      <text>ManagedService</text>
+      <auto_size>true</auto_size>
+      <font>
+        <font family="Liberation Sans" size="18" style="REGULAR"/>
+      </font>
+      <border_width>2</border_width>
+      <border_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </border_color>
+      <background_color>
+        <color red="218" blue="218" green="218" alpha="255"/>
+      </background_color>
+      <foreground_color>
+        <color red="0" blue="0" green="0" alpha="255"/>
+      </foreground_color>
+      <transparent>false</transparent>
+      <vertical_alignment>1</vertical_alignment>
+      <name>Label_1</name>
+    </widget>
+    <background_color>
+      <color red="187" blue="187" green="187" alpha="255"/>
+    </background_color>
+    <height>40</height>
+    <width>330</width>
+  </display>

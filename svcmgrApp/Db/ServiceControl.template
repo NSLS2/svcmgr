@@ -1,0 +1,21 @@
+record(mbbo, "$(P)$(R)State"){
+    field(DESC, "Stop or Start the $(SVC) service")
+    field(DTYP, "stream")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(ZRST, "Stop")
+    field(ONST, "Start")
+    field(TWST, "Restart")
+    field(SCAN, "Passive")
+}
+
+record(mbbo, "$(P)$(R)Enabled") {
+    field(DESC, "Enable or disable the $(SVC) service")
+    field(DTYP, "stream")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(ZRST, "Disable")
+    field(ONST, "Enable")
+    field(SCAN, "Passive")
+}
