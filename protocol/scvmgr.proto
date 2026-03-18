@@ -4,13 +4,19 @@ InTerminator = LF;
 getString {
     wait 50;
     ExtraInput=Ignore;
-    out "$1";
+    out "\$1 \$2";
     in %s;
 }
 
 getInteger {
     wait 50;
     ExtraInput=Ignore;
-    out "$1";
+    out "\$1 \$2";
     in %d;
+}
+
+runCmd {
+    wait 50;
+    ExtraInput=Ignore;
+    out "%s \$1";
 }

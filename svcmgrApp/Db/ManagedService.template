@@ -1,2 +1,132 @@
-include "ServiceControl.template"
-include "ServiceStatus.template"
+
+record(mbbo, "$(P)$(R)State"){
+    field(DESC, "Stop or Start the $(SVC) service")
+    field(DTYP, "stream")
+    field(OUT, "@svcmgr.proto runCmd($(SVC))")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(ZRST, "stop")
+    field(ONST, "start")
+    field(TWST, "restart")
+    field(SCAN, "Passive")
+}
+
+record(mbbi, "$(P)$(R)Status_RBV") {
+    field(DESC, "Status of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(status, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(ZRST, "Active")
+    field(ONST, "Inactive")
+    field(TWST, "Activating")
+    field(THST, "Deactivating")
+    field(FRST, "Failed")
+}
+
+record(mbbi, "$(P)$(R)SubStatus_RBV") {
+    field(DESC, "Sub-status of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(substatus, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(ZRST, "Running")
+    field(ONST, "Exited")
+    field(TWST, "Waiting")
+    field(THST, "Dead")
+}
+
+record(mbbi, "$(P)$(R)UnitFileState_RBV") {
+    field(DESC, "Unit file state of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(unitfilestate, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+    field(ZRVL, "0")
+    field(ONVL, "1")
+    field(TWVL, "2")
+    field(THVL, "3")
+    field(FRVL, "4")
+    field(FVVL, "5")
+    field(ZRST, "Loaded")
+    field(ONST, "Enabled")
+    field(TWST, "Disabled")
+    field(THST, "Static")
+    field(FRST, "Masked")
+    field(FVST, "Not-found")
+}
+
+record(stringin, "$(P)$(R)StartedTime_RBV") {
+    field(DESC, "Time when the $(SVC) service was last started")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(startedtime, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(P)$(R)Description_RBV") {
+    field(DESC, "Description of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(description, $(SVC)) $(PORT)")
+    field(PINI, "YES")
+    field(SCAN, "Passive")
+}
+
+record(ai, "$(P)$(R)MainPID_RBV") {
+    field(DESC, "Main PID of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getInteger(mainpid, $(SVC)) $(PORT)")
+    field(PINI, "YES")
+    field(SCAN, "Passive")
+}
+
+record(stringin, "$(P)$(R)CPUTime_RBV") {
+    field(DESC, "CPU time used by the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(cputime, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+}
+
+record(ai, "$(P)$(R)NumTasks_RBV") {
+    field(DESC, "Number of tasks in the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getInteger(numtasks, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(P)$(R)ServiceName_RBV") {
+    field(DESC, "Name of the $(SVC) service")
+    field(DTYP, "Soft Channel")
+    field(VAL, "$(SVC)")
+    field(SCAN, "Passive")
+}
+
+record(stringin, "$(P)$(R)Uptime_RBV") {
+    field(DESC, "Uptime of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(uptime, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+}
+
+record(stringin, "$(P)$(R)MemoryUsage_RBV") {
+    field(DESC, "Memory usage of the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(memoryusage, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+}
+
+record(waveform, "$(P)$(R)Log_RBV") {
+    field(DESC, "Recent log messages from the $(SVC) service")
+    field(DTYP, "stream")
+    field(INP, "@svcmgr.proto getString(log, $(SVC)) $(PORT)")
+    field(SCAN, "1 second")
+    field(FTVL, "STRING")
+    field(NELM, "300")
+}

@@ -34,9 +34,15 @@ jobs:
 
 
   build:
+<<<<<<< Updated upstream
     name: Build and Test svcmgr on EL${{ matrix.rhel_version }}
 
     needs: lint
+=======
+    name: Build svcmgr on EL${{ matrix.rhel_version }}
+
+    # needs: lint
+>>>>>>> Stashed changes
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -84,4 +90,8 @@ jobs:
         run: pip install pytest
 
       - name: Run tests
+<<<<<<< Updated upstream
         run: pytest
+=======
+        run: pytest
+>>>>>>> Stashed changes

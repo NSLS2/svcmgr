@@ -133,9 +133,16 @@ def test_start_failure(mock_systemctl):
 
 def test_status_single_service(mock_systemctl):
     mock_systemctl.return_value = MockCompletedProcess(0, "active\n", "")
+<<<<<<< Updated upstream
     svcmgr.handle_command("status camserver", SERVICES)
     assert len(mock_systemctl.calls) == 1
     assert mock_systemctl.calls[0][0][0] == ["systemctl", "status", "camserver"]
+=======
+    result = svcmgr.handle_command("status camserver", SERVICES)
+    assert result == "Active"
+    assert len(mock_systemctl.calls) == 1
+    assert mock_systemctl.calls[0][0][0] == ["systemctl", "show", "-p", "ActiveState", "--value", "camserver"]
+>>>>>>> Stashed changes
 
 
 def test_status_all_services(mock_systemctl):
@@ -147,6 +154,254 @@ def test_status_all_services(mock_systemctl):
 
 
 # ---------------------------------------------------------------------------
+<<<<<<< Updated upstream
+=======
+# Query command tests (substatus, unitfilestate, description, etc.)
+# ---------------------------------------------------------------------------
+
+@pytest.mark.parametrize("cmd", [
+    "substatus", "unitfilestate", "startedtime", "description",
+    "mainpid", "cputime", "numtasks", "uptime", "memoryusage", "log",
+])
+def test_query_missing_service_name(cmd):
+    result = svcmgr.handle_command(cmd, SERVICES)
+    assert "ERROR" in result
+    assert "requires a service name" in result
+
+
+@pytest.mark.parametrize("cmd", [
+    "substatus", "unitfilestate", "startedtime", "description",
+    "mainpid", "cputime", "numtasks", "uptime", "memoryusage", "log",
+])
+def test_query_unmanaged_service(cmd):
+    result = svcmgr.handle_command("{} unknown_svc".format(cmd), SERVICES)
+    assert "ERROR" in result
+    assert "not a managed service" in result
+
+
+def test_substatus(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "running\n", "")
+    result = svcmgr.handle_command("substatus camserver", SERVICES)
+    assert result == "Running"
+
+
+def test_substatus_dead(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "dead\n", "")
+    result = svcmgr.handle_command("substatus camserver", SERVICES)
+    assert result == "Dead"
+
+
+def test_unitfilestate(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "enabled\n", "")
+    result = svcmgr.handle_command("unitfilestate camserver", SERVICES)
+    assert result == "Enabled"
+
+
+def test_unitfilestate_fallback_to_loadstate(mock_systemctl):
+    """When UnitFileState is empty, falls back to LoadState."""
+    call_count = [0]
+    def fake_run(*args, **kwargs):
+        mock_systemctl.calls.append((args, kwargs))
+        call_count[0] += 1
+        if call_count[0] == 1:
+            return MockCompletedProcess(0, "\n", "")
+        return MockCompletedProcess(0, "loaded\n", "")
+    mock_systemctl.__class__.__call__ = lambda self, *a, **k: fake_run(*a, **k)
+    result = svcmgr.handle_command("unitfilestate camserver", SERVICES)
+    assert result == "Loaded"
+
+
+def test_startedtime(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "Mon 2026-03-18 10:00:00 EDT\n", "")
+    result = svcmgr.handle_command("startedtime camserver", SERVICES)
+    assert result == "Mon 2026-03-18 10:00:00 EDT"
+
+
+def test_startedtime_empty(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "\n", "")
+    result = svcmgr.handle_command("startedtime camserver", SERVICES)
+    assert result == "n/a"
+
+
+def test_description(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "Camera Server Daemon\n", "")
+    result = svcmgr.handle_command("description camserver", SERVICES)
+    assert result == "Camera Server Daemon"
+
+
+def test_description_empty(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "\n", "")
+    result = svcmgr.handle_command("description camserver", SERVICES)
+    assert result == "n/a"
+
+
+def test_mainpid(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "12345\n", "")
+    result = svcmgr.handle_command("mainpid camserver", SERVICES)
+    assert result == "12345"
+
+
+def test_mainpid_empty(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "\n", "")
+    result = svcmgr.handle_command("mainpid camserver", SERVICES)
+    assert result == "0"
+
+
+def test_cputime(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "5000000000\n", "")
+    result = svcmgr.handle_command("cputime camserver", SERVICES)
+    assert result == "5s"
+
+
+def test_numtasks(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "4\n", "")
+    result = svcmgr.handle_command("numtasks camserver", SERVICES)
+    assert result == "4"
+
+
+def test_numtasks_invalid(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "[not set]\n", "")
+    result = svcmgr.handle_command("numtasks camserver", SERVICES)
+    assert result == "0"
+
+
+def test_memoryusage(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "104857600\n", "")
+    result = svcmgr.handle_command("memoryusage camserver", SERVICES)
+    assert "100.0MB" in result
+
+
+def test_memoryusage_empty(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "\n", "")
+    result = svcmgr.handle_command("memoryusage camserver", SERVICES)
+    assert result == "0B"
+
+
+def test_log(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "line1\nline2\nline3\n", "")
+    result = svcmgr.handle_command("log camserver", SERVICES)
+    assert "line1" in result
+    assert "line3" in result
+
+
+# ---------------------------------------------------------------------------
+# format_nanoseconds tests
+# ---------------------------------------------------------------------------
+
+def test_format_nanoseconds_seconds():
+    assert svcmgr.format_nanoseconds("5000000000") == "5s"
+
+
+def test_format_nanoseconds_minutes():
+    assert svcmgr.format_nanoseconds("90000000000") == "1m 30s"
+
+
+def test_format_nanoseconds_hours():
+    assert svcmgr.format_nanoseconds("3661000000000") == "1h 1m 1s"
+
+
+def test_format_nanoseconds_zero():
+    assert svcmgr.format_nanoseconds("0") == "0s"
+
+
+def test_format_nanoseconds_invalid():
+    assert svcmgr.format_nanoseconds("not_a_number") == "0s"
+
+
+def test_format_nanoseconds_empty():
+    assert svcmgr.format_nanoseconds("") == "0s"
+
+
+# ---------------------------------------------------------------------------
+# format_bytes tests
+# ---------------------------------------------------------------------------
+
+def test_format_bytes_bytes():
+    assert svcmgr.format_bytes("500") == "500B"
+
+
+def test_format_bytes_kilobytes():
+    assert svcmgr.format_bytes("2048") == "2.0KB"
+
+
+def test_format_bytes_megabytes():
+    result = svcmgr.format_bytes("104857600")
+    assert "100.0MB" in result
+
+
+def test_format_bytes_gigabytes():
+    result = svcmgr.format_bytes("1073741824")
+    assert "1.0GB" in result
+
+
+def test_format_bytes_zero():
+    assert svcmgr.format_bytes("0") == "0B"
+
+
+def test_format_bytes_invalid():
+    assert svcmgr.format_bytes("bad") == "0B"
+
+
+def test_format_bytes_empty():
+    assert svcmgr.format_bytes("") == "0B"
+
+
+# ---------------------------------------------------------------------------
+# get_systemd_property tests
+# ---------------------------------------------------------------------------
+
+def test_get_systemd_property(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "active\n", "")
+    result = svcmgr.get_systemd_property("camserver", "ActiveState")
+    assert result == "active"
+    assert mock_systemctl.calls[0][0][0] == [
+        "systemctl", "show", "-p", "ActiveState", "--value", "camserver"
+    ]
+
+
+def test_get_systemd_property_empty(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "\n", "")
+    result = svcmgr.get_systemd_property("camserver", "ActiveState")
+    assert result == ""
+
+
+def test_get_systemd_property_exception(mock_systemctl):
+    mock_systemctl.side_effect = OSError("fail")
+    result = svcmgr.get_systemd_property("camserver", "ActiveState")
+    assert result == ""
+
+
+# ---------------------------------------------------------------------------
+# get_journal_lines tests
+# ---------------------------------------------------------------------------
+
+def test_get_journal_lines(mock_systemctl):
+    mock_systemctl.return_value = MockCompletedProcess(0, "log line 1\nlog line 2\n", "")
+    result = svcmgr.get_journal_lines("camserver")
+    assert "log line 1" in result
+    assert "log line 2" in result
+
+
+def test_get_journal_lines_exception(mock_systemctl):
+    mock_systemctl.side_effect = OSError("fail")
+    result = svcmgr.get_journal_lines("camserver")
+    assert result == ""
+
+
+# ---------------------------------------------------------------------------
+# compute_uptime tests
+# ---------------------------------------------------------------------------
+
+def test_compute_uptime_empty():
+    assert svcmgr.compute_uptime("") == "0s"
+
+
+def test_compute_uptime_na():
+    assert svcmgr.compute_uptime("n/a") == "0s"
+
+
+# ---------------------------------------------------------------------------
+>>>>>>> Stashed changes
 # run_systemctl tests
 # ---------------------------------------------------------------------------
 

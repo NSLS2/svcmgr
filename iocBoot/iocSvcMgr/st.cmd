@@ -17,6 +17,6 @@ drvAsynIPPortConfigure("$(PORT)", "$(IP_PORT)", 0)
 asynOctetSetInputEos("$(PORT)", 0, "\n")
 asynOctetSetOutputEos("$(PORT)", 0, "\n")
 
-dbLoadRecords("$(TOP)/db/ManagedService.template", "P=$(PREFIX), R=MyService:, SVC=MyService")
+dbLoadRecords("$(TOP)/db/ManagedService.template", "P=$(PREFIX), R=MyService:, PORT=$(PORT), SVC=MyService")
 
 iocInit()

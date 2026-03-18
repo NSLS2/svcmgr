@@ -11,7 +11,7 @@
       </line_color>
       <name>Rectangle_1</name>
       <width>330</width>
-      <height>90</height>
+      <height>60</height>
     </widget>
     <widget type="label" version="2.0.0">
       <x>10</x>
@@ -50,41 +50,6 @@
     </widget>
     <widget type="label" version="2.0.0">
       <x>10</x>
-      <y>60</y>
-      <width>150</width>
-      <height>20</height>
-      <text>Enable or disable the $(SVC) service</text>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="187" blue="187" green="187" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <horizontal_alignment>0</horizontal_alignment>
-      <name>Label_2</name>
-    </widget>
-    <widget type="combo" version="2.0.0">
-      <x>170</x>
-      <y>60</y>
-      <width>150</width>
-      <height>20</height>
-      <pv_name>$(P)$(R)Enabled</pv_name>
-      <foreground_color>
-        <color red="0" blue="0" green="0" alpha="255"/>
-      </foreground_color>
-      <background_color>
-        <color red="115" blue="255" green="223" alpha="255"/>
-      </background_color>
-      <font>
-        <font family="Liberation Sans" size="16" style="REGULAR"/>
-      </font>
-      <name>ComboBox_2</name>
-    </widget>
-    <widget type="label" version="2.0.0">
-      <x>10</x>
       <y>0</y>
       <width>320</width>
       <height>20</height>
@@ -105,11 +70,11 @@
       </foreground_color>
       <transparent>false</transparent>
       <vertical_alignment>1</vertical_alignment>
-      <name>Label_3</name>
+      <name>Label_2</name>
     </widget>
     <background_color>
       <color red="187" blue="187" green="187" alpha="255"/>
     </background_color>
-    <height>100</height>
+    <height>70</height>
     <width>330</width>
   </display>
