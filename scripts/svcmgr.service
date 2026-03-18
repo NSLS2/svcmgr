@@ -1,0 +1,19 @@
+[Unit]
+Description=svcmgr - systemd service manager socket interface
+After=network.target
+
+[Service]
+Type=simple
+
+# Replace interface and port here
+ExecStart=/usr/bin/python3 /usr/local/bin/svcmgr.py --interface 127.0.0.1 --port 9876
+
+Restart=on-failure
+RestartSec=5
+
+# TODO: Replace these with an existing service user account
+User=svcmgr
+Group=svcmgr
+
+[Install]
+WantedBy=multi-user.target

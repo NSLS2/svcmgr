@@ -22,11 +22,13 @@ Commands:
 
 import argparse
 import logging
+import os
 import signal
 import socket
 import subprocess
 import sys
 import threading
+from typing import List, Tuple
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("svcmgr")
@@ -35,13 +37,14 @@ logger = logging.getLogger("svcmgr")
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 9876
 
-def run_systemctl(action: str, service: str) -> tuple[int, str]:
+def run_systemctl(action: str, service: str) -> Tuple[int, str]:
     """Run a systemctl command and return (returncode, combined output)."""
     try:
         result = subprocess.run(
             ["systemctl", action, service],
-            capture_output=True,
-            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
             timeout=30,
         )
         output = (result.stdout + result.stderr).strip()
@@ -59,7 +62,7 @@ def get_service_status(service: str) -> str:
     return state
 
 
-def handle_command(command_line: str, services: list[str]) -> str:
+def handle_command(command_line: str, services: List[str]) -> str:
     """Parse and execute a single command. Returns the response string."""
     parts = command_line.strip().split(None, 1)
     if not parts:
@@ -108,7 +111,7 @@ def handle_command(command_line: str, services: list[str]) -> str:
     return f"ERROR: unknown command '{cmd}'. Type 'help' for usage."
 
 
-def handle_client(conn: socket.socket, addr, services: list[str]) -> None:
+def handle_client(conn: socket.socket, addr: object, services: List[str]) -> None:
     """Handle a single client connection."""
     logger.info("Client connected from %s", addr)
     with conn:
@@ -135,7 +138,7 @@ def handle_client(conn: socket.socket, addr, services: list[str]) -> None:
     logger.info("Client %s disconnected", addr)
 
 
-def serve(host: str, port: int, services: list[str]) -> None:
+def serve(host: str, port: int, services: List[str]) -> None:
     """Run the TCP socket server."""
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -190,6 +193,8 @@ def main():
         help=f"TCP port to listen on (default: {DEFAULT_PORT}).",
     )
     args = parser.parse_args()
+    if os.getuid() == 0:
+        parser.error("Refusing to run as root. Use a dedicated service account.")
     serve(args.interface, args.port, args.services)
 
 

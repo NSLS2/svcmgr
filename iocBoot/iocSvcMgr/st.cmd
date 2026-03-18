@@ -10,7 +10,7 @@ svcmgrApp_registerRecordDeviceDriver(pdbbase)
 
 epicsEnvSet("PORT", "SVC")
 epicsEnvSet("PREFIX", "DEV:SVC:")
-epicsEnvSet("IP_PORT", "127.0.0.1:8000")
+epicsEnvSet("IP_PORT", "127.0.0.1:9876")
 epicsEnvSet("STREAM_PROTOCOL_PATH", "$(TOP)/protocol")
 
 drvAsynIPPortConfigure("$(PORT)", "$(IP_PORT)", 0)
