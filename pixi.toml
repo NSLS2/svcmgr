@@ -11,6 +11,7 @@ make-bobfiles = "epicsdb2bob svcmgrApp/Db svcmgrApp/op/bob -d -r _RBV -t minimal
 [dependencies]
 python = ">=3.13,<3.14"
 pyyaml = ">=6.0.3,<7"
+pytest = ">=9.0.2,<10"
 
 [pypi-dependencies]
 epicsdbtools = { git = "https://github.com/jwlodek/epicsdbtools.git" }
