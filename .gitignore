@@ -11,3 +11,8 @@ bin/
 autorun.cmd
 *.local
 envPaths
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log

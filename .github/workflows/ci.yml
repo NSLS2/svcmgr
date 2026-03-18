@@ -1,0 +1,87 @@
+name: CI
+permissions:
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  # lint:
+  #   name: Lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v4
+  #       with:
+  #         persist-credentials: false
+
+  #     - name: Setup pixi
+  #       uses: prefix-dev/setup-pixi@8ca4608ef7f4daeb54f5205b20d0b7cb42f11143  # v0.8.14
+  #       with:
+  #         pixi-version: v0.56.0
+  #         cache: false
+  #         frozen: true
+
+  #     - name: Run linting checks
+  #       run: pixi run lint
+
+
+
+  build:
+    name: Build and Test svcmgr on EL${{ matrix.rhel_version }}
+
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rhel_version: [8, 9, 10]
+    container:
+      image: ghcr.io/nsls2/epics-alma${{ matrix.rhel_version }}:latest
+      options: --user root
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Create RELEASE.local
+        run : |
+          cat > configure/RELEASE.local << EOF
+          EPICS_BASE=/usr/lib64/epics
+          EOF
+
+      - name: Build svcmgr
+        run: |
+          make -j4
+
+  test:
+    name: Run unit tests for Python ${{ matrix.python-version }}
+    needs: build
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12', '3.13']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install pytest
+
+      - name: Run tests
+        run: pytest
